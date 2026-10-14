@@ -67,5 +67,5 @@ class PyPipits(PythonPackage):
         env.set("PIPITS_WARCUP_RETRAINED_DIR", self.prefix.refdb.warcup_retrained_V2)
         env.set(
             "PIPITS_RDP_CLASSIFIER_JAR",
-            join_path(self.spec["rdp-classifier"].prefix.bin, "classifier.jar"),
+            join_path(self.spec["rdptools"].prefix, "classifier.jar"),
         )
