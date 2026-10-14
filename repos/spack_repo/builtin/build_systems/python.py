@@ -164,7 +164,10 @@ class PythonExtension(PackageBase):
                 copied_files[(s.st_dev, s.st_ino)] = dst
                 shutil.copy2(src, dst)
                 filter_file(
-                    python.prefix, os.path.abspath(view.get_projection_for_spec(self.spec)), dst
+                    python.prefix,
+                    os.path.abspath(view.get_projection_for_spec(self.spec)),
+                    dst,
+                    string=True,
                 )
             else:
                 view.link(src, dst)
