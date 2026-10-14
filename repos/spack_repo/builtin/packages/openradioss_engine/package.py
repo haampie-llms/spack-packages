@@ -88,9 +88,9 @@ class OpenradiossEngine(CMakePackage):
 
         if "+mpi" in self.spec:
             args.append(self.define("MPI", "ompi"))
-            args.append(self.define("mpi_root", self.spec["mpi"].prefix))
-            args.append(self.define("mpi_incdir", self.spec["mpi"].prefix.include))
-            args.append(self.define("mpi_libdir", self.spec["mpi"].prefix.lib))
+            args.append(self.define("mpi_root", self.spec["openmpi"].prefix))
+            args.append(self.define("mpi_incdir", self.spec["openmpi"].prefix.include))
+            args.append(self.define("mpi_libdir", self.spec["openmpi"].prefix.lib))
         else:
             args.append(self.define("MPI", "smp"))
 
@@ -132,5 +132,5 @@ class OpenradiossEngine(CMakePackage):
         )
         env.prepend_path("PATH", join_path(self.prefix, "exec"))
         if "+mpi" in self.spec:
-            env.prepend_path("PATH", self.spec["mpi"].prefix.bin)
-            env.prepend_path("LD_LIBRARY_PATH", self.spec["mpi"].prefix.lib)
+            env.prepend_path("PATH", self.spec["openmpi"].prefix.bin)
+            env.prepend_path("LD_LIBRARY_PATH", self.spec["openmpi"].prefix.lib)
