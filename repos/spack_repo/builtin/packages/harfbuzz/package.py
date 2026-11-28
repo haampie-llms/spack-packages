@@ -125,6 +125,9 @@ class Harfbuzz(MesonPackage, AutotoolsPackage, CMakePackage):
         patch("harfbuzz_10_0_cmake_add_missing_table_sources.patch", when="@10:11.1")
         patch("harfbuzz_11_2_cmake_add_missing_table_sources.patch", when="@11.2:11.3")
         patch("harfbuzz_11_4_cmake_add_missing_table_sources.patch", when="@11.4")
+        # From 15.0, harfbuzz-icu links the ICU library file instead of the ICU::uc target,
+        # so it no longer gets the ICU include directory
+        patch("harfbuzz_15_cmake_icu_include_dirs.patch", when="@15:")
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")

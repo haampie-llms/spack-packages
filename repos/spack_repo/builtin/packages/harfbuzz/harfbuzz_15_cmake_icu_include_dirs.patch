@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -398,6 +398,7 @@
+ 
+   get_target_property(ICU_UC_LIBRARY ICU::uc IMPORTED_LOCATION)
+   list(APPEND THIRD_PARTY_LIBS ${ICU_UC_LIBRARY})
++  include_directories(${ICU_INCLUDE_DIRS})
+ endif ()
+ 
+ if (APPLE AND HB_HAVE_CORETEXT)
