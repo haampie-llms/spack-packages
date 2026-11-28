@@ -115,6 +115,12 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
     variant(
         "clang", default=True, description="Build the LLVM C/C++/Objective-C compiler frontend"
     )
+    variant(
+        "clang_tools_extra",
+        default=True,
+        when="+clang",
+        description="Build clang-tools-extra: clangd, clang-tidy, clang-include-cleaner, etc.",
+    )
 
     variant("flang", default=False, description="Build the LLVM Fortran compiler frontend ")
 
@@ -798,6 +804,18 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
             prefix = "+" if var in variants else "~"
             variant_strings.append(prefix + var)
 
+        # clangd and clang-tidy are not among the detected executables, so look for them next
+        # to clang, with the same version suffix (e.g. clang-tidy-18 next to clang-18)
+        if "clang" in variants:
+            bindir, clang = os.path.split(compilers.get("c") or compilers["cxx"])
+            match = re.search(r"-[\d.]+$", clang)
+            suffix = match.group(0) if match else ""
+            found = any(
+                os.path.exists(os.path.join(bindir, f"{tool}{suffix}"))
+                for tool in ("clangd", "clang-tidy")
+            )
+            variant_strings.append(("+" if found else "~") + "clang_tools_extra")
+
         return "".join(variant_strings), {"compilers": compilers}
 
     @classmethod
@@ -1060,7 +1078,8 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
 
         if spec.satisfies("+clang"):
             projects.append("clang")
-            projects.append("clang-tools-extra")
+            if spec.satisfies("+clang_tools_extra"):
+                projects.append("clang-tools-extra")
             if spec.satisfies("openmp=runtime"):
                 runtimes.append("openmp")
             elif spec.satisfies("openmp=project"):
